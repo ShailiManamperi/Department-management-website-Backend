@@ -28,6 +28,7 @@ export default async function handler(req, res) {
         "SELECT * FROM quotations WHERE id = ?",
         [id]
       );
+      console.log(quote);
 
       const [revisions] = await pool.query(
         "SELECT * FROM quotation_revisions WHERE quote_id = ? ORDER BY id DESC",
