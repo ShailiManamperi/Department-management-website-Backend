@@ -1,7 +1,6 @@
 import pool from "./db.js";
 
-// const allowedOrigin = "https://deparmentmanagementwebsite.shailimanamperi2002.workers.dev";
-const allowedOrigin = "http://127.0.0.1:5502/";
+const allowedOrigin = "https://deparmentmanagementwebsite.shailimanamperi2002.workers.dev";
 
 function setCors(res) {
   res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
