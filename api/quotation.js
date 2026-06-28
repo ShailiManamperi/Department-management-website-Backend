@@ -32,14 +32,15 @@ export default async function handler(req, res) {
         value_amount,
         gp_amount,
         status,
+        date,
         revision_count,
         remark
       } = req.body;
 
       const sql = `
         INSERT INTO quotations
-        (quote_ref, project_name, client_name, scope, sale_center, sales_person, value_amount, gp_amount, status, revision_count, remark)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (quote_ref, project_name, client_name, scope, sale_center, sales_person, value_amount, gp_amount, status,quotation_date, revision_count, remark)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
       `;
 
       const [result] = await pool.execute(sql, [
@@ -51,7 +52,7 @@ export default async function handler(req, res) {
         sales_person,
         value_amount,
         gp_amount,
-        status,
+        status,date,
         revision_count,
         remark
       ]);
