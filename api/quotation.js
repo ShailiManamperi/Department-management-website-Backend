@@ -6,23 +6,24 @@ export default async function handler(req, res) {
   }
 
   try {
-    const {
-      quote_ref,project_name,client_name,scope,sale_center,sales_person,value_amount,gp_amount,status,revision_count,remark
-    } = req.body;
+    // const {
+    //   quote_ref,project_name,client_name,scope,sale_center,sales_person,value_amount,gp_amount,status,revision_count,remark
+    // } = req.body;
 
-    const sql = `
-      INSERT INTO quotations 
-      (quote_ref, project_name, client_name, scope, sale_center, sales_person, value_amount, gp_amount, status, revision_count, remark)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
+    // const sql = `
+    //   INSERT INTO quotations 
+    //   (quote_ref, project_name, client_name, scope, sale_center, sales_person, value_amount, gp_amount, status, revision_count, remark)
+    //   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    // `;
 
-    const [result] = await db.execute(sql, [
-      quote_ref,project_name,client_name,scope,sale_center,sales_person,value_amount,gp_amount,status,revision_count,remark
-    ]);
+    // const [result] = await db.execute(sql, [
+    //   quote_ref,project_name,client_name,scope,sale_center,sales_person,value_amount,gp_amount,status,revision_count,remark
+    // ]);
 
     res.status(200).json({
       success: true,
-      id: result.insertId
+      id: "pass"
+    //   id: result.insertId
     });
 
   } catch (err) {
