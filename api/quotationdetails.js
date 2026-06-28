@@ -23,7 +23,7 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     try {
       const { id } = req.query;
-
+      console.log(id);
       const [quote] = await pool.query(
         "SELECT * FROM quotations WHERE id = ?",
         [id]
@@ -38,7 +38,7 @@ export default async function handler(req, res) {
       return res.status(200).json({
         success: true,
         quote: quote[0],
-        revisions
+        revisions,quote
       });
 
     } catch (err) {
