@@ -1,50 +1,73 @@
 import pool from "./db.js";
 
 export default async function handler(req, res) {
-  try {
-    const [rows] = await pool.query("SELECT 1 + 2 AS result");
+  // GET test (optional debug)
+  if (req.method === "GET") {
+    try {
+      const [rows] = await pool.query("SELECT 1 + 2 AS result");
 
-    res.status(200).json({
-      success: true,
-      message: "Backend connected to MySQL",
-      data: rows,
-    });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      error: err.message,
-    });
-  }
-}
-
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method Not Allowed" });
+      return res.status(200).json({
+        success: true,
+        message: "Backend connected to MySQL",
+        data: rows,
+      });
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        error: err.message,
+      });
+    }
   }
 
-  try {
-    // const {
-    //   quote_ref,project_name,client_name,scope,sale_center,sales_person,value_amount,gp_amount,status,revision_count,remark
-    // } = req.body;
+  // POST insert quotation
+  if (req.method === "POST") {
+    try {
+      const {
+        quote_ref,
+        project_name,
+        client_name,
+        scope,
+        sale_center,
+        sales_person,
+        value_amount,
+        gp_amount,
+        status,
+        revision_count,
+        remark
+      } = req.body;
 
-    // const sql = `
-    //   INSERT INTO quotations 
-    //   (quote_ref, project_name, client_name, scope, sale_center, sales_person, value_amount, gp_amount, status, revision_count, remark)
-    //   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    // `;
+      const sql = `
+        INSERT INTO quotations
+        (quote_ref, project_name, client_name, scope, sale_center, sales_person, value_amount, gp_amount, status, revision_count, remark)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `;
 
-    // const [result] = await db.execute(sql, [
-    //   quote_ref,project_name,client_name,scope,sale_center,sales_person,value_amount,gp_amount,status,revision_count,remark
-    // ]);
+      const [result] = await pool.execute(sql, [
+        quote_ref,
+        project_name,
+        client_name,
+        scope,
+        sale_center,
+        sales_person,
+        value_amount,
+        gp_amount,
+        status,
+        revision_count,
+        remark
+      ]);
 
-    res.status(200).json({
-      success: true,
-      id: "pass"
-    //   id: result.insertId
-    });
+      return res.status(200).json({
+        success: true,
+        id: result.insertId
+      });
 
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, error: err.message });
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        error: err.message
+      });
+    }
   }
+
+  return res.status(405).json({ message: "Method Not Allowed" });
 }
