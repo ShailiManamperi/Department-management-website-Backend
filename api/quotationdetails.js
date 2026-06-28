@@ -38,7 +38,7 @@ export default async function handler(req, res) {
       return res.status(200).json({
         success: true,
         quote: quote[0],
-        revisions,quote
+        revisions
       });
 
     } catch (err) {
