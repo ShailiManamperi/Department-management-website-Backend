@@ -9,31 +9,28 @@ function setCors(res) {
 }
 
 export default async function handler(req, res) {
-  // ✅ MUST apply CORS on EVERY request
   setCors(res);
 
-  // ✅ FIX: preflight request (this is what browser sends first)
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
 
   // =========================
-  // POST: Save quotation
+  // POST: Add Item
   // =========================
   if (req.method === "POST") {
     try {
       const {
-        quote_ref,project_name,client_name,scope,sale_center,sales_person,value_amount,gp_amount,status,date,revision_count,remark
-      } = req.body;
+        type, name, brand, wattage,lumen,ip,cct,other,supplier, price} = req.body;
 
       const sql = `
-        INSERT INTO quotations
-        (quote_ref, project_name, client_name, scope, sale_center, sales_person, value_amount, gp_amount, status,quotation_date, revision_count, remark)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
+        INSERT INTO items
+        (type, name, brand, wattage, lumen, ip, cct, other, supplier, price)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
 
       const [result] = await pool.execute(sql, [
-        quote_ref,project_name,client_name, scope,sale_center,sales_person,value_amount,gp_amount,status,date,revision_count,remark
+        type,name,brand,wattage,lumen,ip,cct,other, supplier,price
       ]);
 
       return res.status(200).json({
@@ -51,26 +48,29 @@ export default async function handler(req, res) {
     }
   }
 
+  // =========================
+  // GET: Fetch Items
+  // =========================
   if (req.method === "GET") {
-  try {
-    const [rows] = await pool.query(
-      "SELECT * FROM quotations ORDER BY id DESC"
-    );
+    try {
+      const [rows] = await pool.query(
+        "SELECT * FROM items ORDER BY id DESC"
+      );
 
-    return res.status(200).json({
-      success: true,
-      data: rows
-    });
+      return res.status(200).json({
+        success: true,
+        data: rows
+      });
 
-  } catch (err) {
-    console.error("GET Error:", err);
+    } catch (err) {
+      console.error("GET Error:", err);
 
-    return res.status(500).json({
-      success: false,
-      error: err.message
-    });
+      return res.status(500).json({
+        success: false,
+        error: err.message
+      });
+    }
   }
-}
 
   return res.status(405).json({ message: "Method Not Allowed" });
 }
