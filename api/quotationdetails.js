@@ -55,29 +55,36 @@ export default async function handler(req, res) {
   // POST (add revision)
   // =========================
   if (req.method === "POST") {
-    try {
-      const { quote_id, quote_ref, value_amount } = req.body;
+  try {
+    const {quote_id,quote_ref_new,value_amount_new,date_new,quote_ref,value_amount,date} = req.body;
 
-      const [result] = await pool.query(
-        `INSERT INTO quotation_revisions (quote_id, quote_ref, value_amount)
-         VALUES (?, ?, ?)`,
-        [quote_id, quote_ref, value_amount]
-      );
+    // 1. Insert revision
+    const [result] = await pool.query(
+      `INSERT INTO quotation_revisions (quote_id, quote_ref, value_amount, revision_date) VALUES (?, ?, ?, ?)`,
+      [quote_id, quote_ref, value_amount, date]
+    );
 
-      return res.status(200).json({
-        success: true,
-        id: result.insertId
-      });
+    // 2. Update main quotation
+    const [updateResult] = await pool.query(
+      `UPDATE quotations SET quote_ref = ?, value_amount = ?, quotation_date = ? WHERE id = ?`,
+      [quote_ref_new, value_amount_new, date_new, quote_id]
+    );
 
-    } catch (err) {
-      console.error("POST error:", err);
+    return res.status(200).json({
+      success: true,
+      revision_id: result.insertId,
+      updated: updateResult.affectedRows
+    });
 
-      return res.status(500).json({
-        success: false,
-        error: err.message
-      });
-    }
+  } catch (err) {
+    console.error("POST error:", err);
+
+    return res.status(500).json({
+      success: false,
+      error: err.message
+    });
   }
+}
 
   // =========================
   // METHOD NOT ALLOWED
