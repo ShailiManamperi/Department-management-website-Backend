@@ -71,5 +71,26 @@ export default async function handler(req, res) {
     }
   }
 
+  if (req.method === "GET") {
+  try {
+    const [rows] = await pool.query(
+      "SELECT * FROM quotations ORDER BY id DESC"
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: rows
+    });
+
+  } catch (err) {
+    console.error("GET Error:", err);
+
+    return res.status(500).json({
+      success: false,
+      error: err.message
+    });
+  }
+}
+
   return res.status(405).json({ message: "Method Not Allowed" });
 }
