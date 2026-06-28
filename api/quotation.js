@@ -23,17 +23,17 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     try {
       const {
-        quote_ref,project_name,client_name,scope,sale_center,sales_person,value_amount,gp_amount,status,date,revision_count,remark
+        quote_ref,project_name,client_name,scope,sale_center,sales_person,value_amount,gp_amount,status,date,revision_count,remark,profit
       } = req.body;
 
       const sql = `
         INSERT INTO quotations
-        (quote_ref, project_name, client_name, scope, sale_center, sales_person, value_amount, gp_amount, status,quotation_date, revision_count, remark)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
+        (quote_ref, project_name, client_name, scope, sale_center, sales_person, value_amount, gp_amount, status,quotation_date, revision_count, remark,profit)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)
       `;
 
       const [result] = await pool.execute(sql, [
-        quote_ref,project_name,client_name, scope,sale_center,sales_person,value_amount,gp_amount,status,date,revision_count,remark
+        quote_ref,project_name,client_name, scope,sale_center,sales_person,value_amount,gp_amount,status,date,revision_count,remark,profit
       ]);
 
       return res.status(200).json({
