@@ -1,25 +1,25 @@
 import pool from "./db.js";
 
-export default async function handler(req, res) {
-  // GET test (optional debug)
-  if (req.method === "GET") {
-    try {
-      const [rows] = await pool.query("SELECT 1 + 2 AS result");
+const allowedOrigin = "https://deparmentmanagementwebsite.shailimanamperi2002.workers.dev";
 
-      return res.status(200).json({
-        success: true,
-        message: "Backend connected to MySQL",
-        data: rows,
-      });
-    } catch (err) {
-      return res.status(500).json({
-        success: false,
-        error: err.message,
-      });
-    }
+function setCors(res) {
+  res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
+  res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+}
+
+export default async function handler(req, res) {
+  // ✅ MUST apply CORS on EVERY request
+  setCors(res);
+
+  // ✅ FIX: preflight request (this is what browser sends first)
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
   }
 
-  // POST insert quotation
+  // =========================
+  // POST: Save quotation
+  // =========================
   if (req.method === "POST") {
     try {
       const {
@@ -62,6 +62,8 @@ export default async function handler(req, res) {
       });
 
     } catch (err) {
+      console.error("DB Error:", err);
+
       return res.status(500).json({
         success: false,
         error: err.message
